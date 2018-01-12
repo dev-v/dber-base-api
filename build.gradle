@@ -30,7 +30,6 @@ allprojects {
                 'org.apache.commons:commons-lang3:3.7',
                 'org.apache.httpcomponents:httpclient-cache:4.5.3'
 
-        compile project(':fastjson')
         compile project(':dber-tool')
 
         testCompile 'junit:junit:4.12',

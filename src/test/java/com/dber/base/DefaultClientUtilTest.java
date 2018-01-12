@@ -1,5 +1,6 @@
 package com.dber.base;
 
+import com.dber.base.enums.DberSystem;
 import com.dber.base.result.Result;
 import com.dber.base.util.Account;
 import com.dber.base.util.DefaultClientUtil;
@@ -15,7 +16,8 @@ import org.junit.Test;
  */
 public class DefaultClientUtilTest {
 
-    IClientUtil clientUtil = DefaultClientUtil.getClientUtil("http://localhost:8080");
+    IClientUtil clientUtil = DefaultClientUtil
+            .getClientUtil("http://localhost:8080", DberSystem.BILL, "");
 
     /**
      * Method: get(String path, Object params, Class<E> clz)
