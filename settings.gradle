@@ -1,5 +1,3 @@
 rootProject.name = 'dber-base-api'
 
-includeFlat 'fastjson'
-
 includeFlat 'dber-tool'
