@@ -45,6 +45,12 @@ public interface IClientUtil {
     <E> Result<E> get(String path, Class<E> clz);
 
     /**
+     * @param path 使用带"/"的根路径
+     * @return
+     */
+    Result<String> get(String path);
+
+    /**
      * @param path   使用带"/"的根路径
      * @param params map or pojo
      * @return
@@ -59,6 +65,13 @@ public interface IClientUtil {
      * @return
      */
     <E> Result<E> post(String path, Object params, Class<E> clz);
+
+    /**
+     * @param path   使用带"/"的根路径
+     * @param params map or pojo
+     * @return
+     */
+    Result<String> post(String path, Object params);
 
     /**
      * @param path   使用带"/"的根路径

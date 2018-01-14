@@ -17,7 +17,7 @@ import org.junit.Test;
 public class DefaultClientUtilTest {
 
     IClientUtil clientUtil = DefaultClientUtil
-            .getClientUtil("http://localhost:8080", DberSystem.BILL, "");
+            .getClientUtil("http://localhost:8081", DberSystem.PLAT, "123");
 
     /**
      * Method: get(String path, Object params, Class<E> clz)
@@ -51,6 +51,18 @@ public class DefaultClientUtilTest {
         account.setVerifyWay("account");
 
         result = clientUtil.post("/login/login", account, Account.class);
+        System.out.println(result.isSuccess());
+        System.out.println(result);
+    }
+
+    /**
+     * Method: post(String path, Object params, Class<E> clz)
+     */
+    @Test
+    public void testApi() throws Exception {
+        Result result;
+
+        result = clientUtil.get("/api/test");
         System.out.println(result.isSuccess());
         System.out.println(result);
     }

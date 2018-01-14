@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public abstract class AbstractClient implements IClient {
 
     protected final DberSystem serviceSystem;
 
-    protected final IClientUtil clientUtil;
+    protected IClientUtil clientUtil;
 
     /**
      * 缓存服务Client实例
@@ -51,7 +52,6 @@ public abstract class AbstractClient implements IClient {
             throw new IllegalArgumentException('【' + serviceSystem.name() + "】客户端实例已经存在，请保持单例使用！");
         }
         this.serviceSystem = serviceSystem;
-        this.clientUtil = getClientUtil();
         SERVICE_CLIENT_MAP.put(serviceSystem, this);
     }
 
@@ -68,4 +68,8 @@ public abstract class AbstractClient implements IClient {
         return DefaultClientUtil.getClientUtil(baseUrl, customSystem, customKey);
     }
 
+    @PostConstruct
+    private void init(){
+        this.clientUtil=getClientUtil();
+    }
 }

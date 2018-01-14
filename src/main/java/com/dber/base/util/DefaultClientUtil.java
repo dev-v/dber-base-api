@@ -73,6 +73,11 @@ public class DefaultClientUtil implements IClientUtil {
     }
 
     @Override
+    public Result<String> get(String path) {
+        return get(path, String.class);
+    }
+
+    @Override
     public String postString(String path, Object params) {
         return httpClientUtil.postString(getUrl(path), getParams(params));
     }
@@ -80,6 +85,11 @@ public class DefaultClientUtil implements IClientUtil {
     @Override
     public <E> Result<E> post(String path, Object params, Class<E> clz) {
         return httpClientUtil.postResult(getUrl(path), getParams(params), clz);
+    }
+
+    @Override
+    public Result<String> post(String path, Object params) {
+        return post(path, params, String.class);
     }
 
     @Override

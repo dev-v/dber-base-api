@@ -10,6 +10,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -20,6 +21,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.URLEncoder;
@@ -72,8 +74,8 @@ public class HttpClientUtil {
 
     public <E> Result<E> getResult(String url, Object params, Class<E> clz) {
         try {
-            return JSON.parseObject(get(url, params).getContent(), getResultType(clz));
-        } catch (Exception e) {
+            return JSON.parseObject(getInputStream(url, params), getResultType(clz));
+        } catch (IOException e) {
             log.error(e);
             throw new IllegalStateException(e);
         }
@@ -81,8 +83,26 @@ public class HttpClientUtil {
 
     public <E> Result<E> postResult(String url, Object params, Class<E> clz) {
         try {
-            return JSON.parseObject(post(url, params).getContent(), getResultType(clz));
-        } catch (Exception e) {
+            return JSON.parseObject(postInputStream(url, params), getResultType(clz));
+        } catch (IOException e) {
+            log.error(e);
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public InputStream getInputStream(String url, Object params) {
+        try {
+            return get(url, params).getContent();
+        } catch (IOException e) {
+            log.error(e);
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public InputStream postInputStream(String url, Object params) {
+        try {
+            return post(url, params).getContent();
+        } catch (IOException e) {
             log.error(e);
             throw new IllegalStateException(e);
         }
@@ -91,7 +111,7 @@ public class HttpClientUtil {
     public String getString(String url, Object params) {
         try {
             return EntityUtils.toString(get(url, params));
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.error(e);
             throw new IllegalStateException(e);
         }
@@ -100,7 +120,7 @@ public class HttpClientUtil {
     public String postString(String url, Object params) {
         try {
             return EntityUtils.toString(post(url, params));
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.error(e);
             throw new IllegalStateException(e);
         }
@@ -113,7 +133,7 @@ public class HttpClientUtil {
             HttpEntity entity = response.getEntity();
             checkResponse(response, entity, params);
             return entity;
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.error(e);
             throw new IllegalStateException(e);
         }
@@ -127,20 +147,21 @@ public class HttpClientUtil {
             HttpEntity entity = response.getEntity();
             checkResponse(response, entity, params);
             return entity;
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.error(e);
             throw new IllegalStateException(e);
         }
     }
 
     public HttpEntity post(String url, Object params) {
+        HttpPost httpPost = null;
         try {
-            HttpPost httpPost = buildPost(url, params);
+            httpPost = buildPost(url, params);
             HttpResponse response = client.execute(httpPost);
             HttpEntity entity = response.getEntity();
             checkResponse(response, entity, params);
             return entity;
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.error(e);
             throw new IllegalStateException(e);
         }
@@ -151,7 +172,7 @@ public class HttpClientUtil {
             JSONObject tempParams = parseParams(params);
 
             Object val;
-            StringBuilder builder = new StringBuilder("?");
+            StringBuilder builder = new StringBuilder(url.contains("?") ? "&" : "?");
             for (Map.Entry<String, Object> entry : tempParams.entrySet()) {
                 val = entry.getValue();
                 if (val != null) {
