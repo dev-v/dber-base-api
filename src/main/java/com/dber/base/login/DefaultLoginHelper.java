@@ -1,6 +1,7 @@
 package com.dber.base.login;
 
 import com.dber.base.entity.Account;
+import com.dber.base.result.Result;
 import com.dber.util.CipherUtil;
 
 /**
@@ -22,7 +23,7 @@ public class DefaultLoginHelper implements ILoginHelper {
     }
 
     @Override
-    public void saveAccount(Account account) {
-
+    public Result<Account> saveAccount(Account account) {
+        return null;
     }
 }

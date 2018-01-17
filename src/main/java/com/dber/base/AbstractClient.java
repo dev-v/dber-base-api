@@ -37,6 +37,9 @@ public abstract class AbstractClient implements IClient {
 
     protected final DberSystem serviceSystem;
 
+    @Autowired
+    private DberSystem customSystem;
+
     protected IClientUtil clientUtil;
 
     /**
@@ -56,7 +59,6 @@ public abstract class AbstractClient implements IClient {
     }
 
     private final IClientUtil getClientUtil() {
-        DberSystem customSystem = DberSystem.valueOf(systemConfig.getService().getName().toUpperCase());
         String customKey = systemConfig.getAuth().getObtain().get(serviceSystem.name().toLowerCase());
         if (Util.isBlank(customKey)) {
             throw new IllegalStateException("请在application.yml的节点dber.service-auth配置要访问服务的key【"

@@ -1,6 +1,7 @@
 package com.dber.base.login;
 
 import com.dber.base.entity.Account;
+import com.dber.base.result.Result;
 
 /**
  * <li>修改记录: ...</li>
@@ -26,5 +27,5 @@ public interface ILoginHelper {
      *
      * @param account
      */
-    void saveAccount(Account account);
+    Result<Account> saveAccount(Account account);
 }

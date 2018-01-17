@@ -19,9 +19,6 @@ public class Account implements Serializable {
 
     private static final long serialVersionUID = 5565421101691993291l;
 
-    /**
-     *
-     */
     private Integer id;
 
     /**
@@ -29,13 +26,12 @@ public class Account implements Serializable {
      */
     private String name;
 
-    /**
-     * 手机号
-     */
     private String cellphone;
 
+    private String email;
+
     /**
-     * 手机登录密码
+     * 账号登录密码
      */
     private String password;
 
@@ -53,9 +49,6 @@ public class Account implements Serializable {
      */
     private Integer status;
 
-    /**
-     * 密码是否过期：1-否，2-是
-     */
     private Integer pwExpired;
 
     /**
