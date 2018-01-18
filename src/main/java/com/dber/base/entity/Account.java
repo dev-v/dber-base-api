@@ -62,6 +62,16 @@ public class Account implements Serializable {
      * 验证码(图形或手机验证码)
      */
     private String captcha;
+
+    /**
+     *
+     */
+    private java.sql.Date createTime;
+
+    /**
+     *
+     */
+    private java.sql.Timestamp modifyTime;
 }
 
 
