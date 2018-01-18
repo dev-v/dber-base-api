@@ -3,6 +3,8 @@ package com.dber.base.util;
 import com.dber.base.result.Result;
 import org.apache.http.HttpEntity;
 
+import java.lang.reflect.Type;
+
 /**
  * <li>修改记录: ...</li>
  * <li>内容摘要: ...</li>
@@ -34,7 +36,7 @@ public interface IClientUtil {
      * @param <E>
      * @return
      */
-    <E> Result<E> get(String path, Object params, Class<E> clz);
+    <E> Result<E> get(String path, Object params, Type type);
 
     /**
      * @param path 使用带"/"的根路径
@@ -42,7 +44,7 @@ public interface IClientUtil {
      * @param <E>
      * @return
      */
-    <E> Result<E> get(String path, Class<E> clz);
+    <E> Result<E> get(String path, Type type);
 
     /**
      * @param path 使用带"/"的根路径
@@ -64,7 +66,7 @@ public interface IClientUtil {
      * @param <E>
      * @return
      */
-    <E> Result<E> post(String path, Object params, Class<E> clz);
+    <E> Result<E> post(String path, Object params, Type type);
 
     /**
      * @param path   使用带"/"的根路径

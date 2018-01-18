@@ -61,29 +61,18 @@ public class HttpClientUtil {
         return INSTANCE;
     }
 
-    private static final <E> Type getResultType(Class<E> clz) {
-        Type type = CACHE_RESPONSE_TYPE.get(clz);
-        if (type == null) {
-            TypeReference<Result<E>> reference = new TypeReference<Result<E>>(clz) {
-            };
-            type = reference.getType();
-            CACHE_RESPONSE_TYPE.put(clz, type);
-        }
-        return type;
-    }
-
-    public <E> Result<E> getResult(String url, Object params, Class<E> clz) {
+    public <E> Result<E> getResult(String url, Object params, Type type) {
         try {
-            return JSON.parseObject(getInputStream(url, params), getResultType(clz));
+            return JSON.parseObject(getInputStream(url, params), type);
         } catch (IOException e) {
             log.error(e);
             throw new IllegalStateException(e);
         }
     }
 
-    public <E> Result<E> postResult(String url, Object params, Class<E> clz) {
+    public <E> Result<E> postResult(String url, Object params, Type type) {
         try {
-            return JSON.parseObject(postInputStream(url, params), getResultType(clz));
+            return JSON.parseObject(postInputStream(url, params), type);
         } catch (IOException e) {
             log.error(e);
             throw new IllegalStateException(e);

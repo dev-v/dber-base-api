@@ -6,6 +6,7 @@ import com.dber.base.enums.DberSystem;
 import com.dber.base.result.Result;
 import org.apache.http.HttpEntity;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,18 +64,18 @@ public class DefaultClientUtil implements IClientUtil {
     }
 
     @Override
-    public <E> Result<E> get(String path, Object params, Class<E> clz) {
-        return httpClientUtil.getResult(getUrl(path), getParams(params), clz);
+    public <E> Result<E> get(String path, Object params, Type type) {
+        return httpClientUtil.getResult(getUrl(path), getParams(params), type);
     }
 
     @Override
-    public <E> Result<E> get(String path, Class<E> clz) {
-        return get(path, null, clz);
+    public <E> Result<E> get(String path, Type type) {
+        return get(path, null, type);
     }
 
     @Override
     public Result<String> get(String path) {
-        return get(path, String.class);
+        return get(path, ResultTypeHelper.getType(String.class));
     }
 
     @Override
@@ -83,13 +84,13 @@ public class DefaultClientUtil implements IClientUtil {
     }
 
     @Override
-    public <E> Result<E> post(String path, Object params, Class<E> clz) {
-        return httpClientUtil.postResult(getUrl(path), getParams(params), clz);
+    public <E> Result<E> post(String path, Object params, Type type) {
+        return httpClientUtil.postResult(getUrl(path), getParams(params), type);
     }
 
     @Override
     public Result<String> post(String path, Object params) {
-        return post(path, params, String.class);
+        return post(path, params, ResultTypeHelper.getType(String.class));
     }
 
     @Override
