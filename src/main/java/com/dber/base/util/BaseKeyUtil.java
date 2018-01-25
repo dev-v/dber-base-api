@@ -18,4 +18,8 @@ public class BaseKeyUtil {
     public static final String getBaseKey(DberSystem system) {
         return "dber_service_url_for_" + system.name();
     }
+
+    public static final boolean isAuthKey(String key) {
+        return key == null ? false : (auth_params_key.equals(key) || auth_params_system.equals(key));
+    }
 }

@@ -19,11 +19,9 @@ import java.util.Map;
  * @since 2018/1/18
  */
 public class ResultTypeHelper {
-
-
-    public static final Map<Class, Type> CACHE_RESPONSE_TYPE = new HashMap<>();
-    public static final Map<Class, Type> CACHE_RESPONSE_COLLECTION_TYPE = new HashMap<>();
-    public static final Map<Class, Type> CACHE_RESPONSE_PAGE_TYPE = new HashMap<>();
+    private static final Map<Class, Type> CACHE_RESPONSE_TYPE = new HashMap<>();
+    private static final Map<Class, Type> CACHE_RESPONSE_COLLECTION_TYPE = new HashMap<>();
+    private static final Map<Class, Type> CACHE_RESPONSE_PAGE_TYPE = new HashMap<>();
 
     public static final <E> Type getType(Class<E> clz) {
         Type type = CACHE_RESPONSE_TYPE.get(clz);

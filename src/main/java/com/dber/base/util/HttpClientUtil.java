@@ -2,7 +2,6 @@ package com.dber.base.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
 import com.dber.base.result.Result;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,7 +9,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -61,9 +59,16 @@ public class HttpClientUtil {
         return INSTANCE;
     }
 
+    private <E> Result<E> checkResult(Result<E> result) {
+        if (!result.isSuccess()) {
+            log.error(result);
+        }
+        return result;
+    }
+
     public <E> Result<E> getResult(String url, Object params, Type type) {
         try {
-            return JSON.parseObject(getInputStream(url, params), type);
+            return checkResult(JSON.parseObject(getInputStream(url, params), type));
         } catch (IOException e) {
             log.error(e);
             throw new IllegalStateException(e);
@@ -72,7 +77,7 @@ public class HttpClientUtil {
 
     public <E> Result<E> postResult(String url, Object params, Type type) {
         try {
-            return JSON.parseObject(postInputStream(url, params), type);
+            return checkResult(JSON.parseObject(postInputStream(url, params), type));
         } catch (IOException e) {
             log.error(e);
             throw new IllegalStateException(e);
@@ -185,12 +190,14 @@ public class HttpClientUtil {
         HttpPost httpPost = new HttpPost(url);
         if (params != null) {
             JSONObject tempParams = parseParams(params);
+            String key;
             Object val;
             List<NameValuePair> pairs = new ArrayList<>(tempParams.size());
             for (Map.Entry<String, Object> entry : tempParams.entrySet()) {
+                key = entry.getKey();
                 val = entry.getValue();
                 if (val != null) {
-                    pairs.add(new BasicNameValuePair(entry.getKey(), val.toString()));
+                    pairs.add(new BasicNameValuePair(key, val.toString()));
                 }
             }
 
@@ -217,6 +224,11 @@ public class HttpClientUtil {
                 sb.append("信息：").append(EntityUtils.toString(entity)).append("\r\n");
             } catch (ParseException | IOException e) {
                 log.error(e);
+            }
+            if (params instanceof JSONObject) {
+                JSONObject obj = (JSONObject) params;
+                obj.remove(BaseKeyUtil.auth_params_key);
+                obj.remove(BaseKeyUtil.auth_params_system);
             }
             sb.append("参数：").append(JSON.toJSONString(params));
             throw new IllegalStateException(sb.toString());
