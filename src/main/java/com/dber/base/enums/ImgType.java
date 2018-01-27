@@ -15,15 +15,16 @@ package com.dber.base.enums;
 public enum ImgType {
 
 
-    SHOP(1, "店铺图片", 100),
-    SHOP_SERVICE(3, "店铺服务项目图片", 50),
-    COACHER_IDENTIFICATION(4, "教练认证头像", 5),
-    CUSTOMER_IDENTIFICATION(5, "用户认证头像", 5),
-    MATRIX_CODE(6, "店铺二维码", 5),
+    SHOP(1, "店铺主图", 1),
+    SHOP_ENV(2, "店铺环境图片", 100),
+    SHOP_SERVICE(3, "店铺服务项目图片", 20),
+    COACHER_IDENTIFICATION(4, "教练认证头像", 1),
+    CUSTOMER_IDENTIFICATION(5, "用户认证头像", 1),
+    MATRIX_CODE(6, "店铺二维码", 1),
     COACHER_CERTIFICATE(7, "教练认证证书", 20),
-    FITNESS_TEST(8, "体能测试结果", 100),
+    FITNESS_TEST(8, "体能测试结果", 50),
     IDENTITY(9, "身份认证", 10),
-    SHOP_SITE(10, "店铺场地图片", 20);
+    SHOP_SITE(10, "店铺场地图片", 10);
 
 
     private int value;
