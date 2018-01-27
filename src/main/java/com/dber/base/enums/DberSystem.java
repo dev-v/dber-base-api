@@ -17,7 +17,8 @@ public enum DberSystem {
     BILL(2,"账单"),
     SHOP(3,"店铺"),
     CUSTOMER(4,"会员"),
-    COACHER(5,"教练")
+    COACHER(5,"教练"),
+    UPLOAD(6,"上传")
     ;
 
     private int value;
@@ -37,9 +38,16 @@ public enum DberSystem {
         return label;
     }
 
-    public boolean is(int value) {
-        return this.value == value;
+    public static DberSystem from(int value) {
+        for (DberSystem member : DberSystem.values()) {
+            if (member.getValue() == value) {
+                return member;
+            }
+        }
+        return null;
     }
 
-
+    public boolean is(Integer value) {
+        return value != null && this.value == value;
+    }
 }

@@ -2,7 +2,7 @@ package com.dber.base.enums;
 
 /**
  * <li>修改记录: ...</li>
- * <li>是否</li>
+ * <li>消息类型</li>
  * <pre>
  *     
  * </pre>
@@ -12,16 +12,15 @@ package com.dber.base.enums;
  * @version 1.0
  * @since 2018/1/11
  */
-public enum YesNo {
-    YES(1,"是"),
-    NO(2,"否")
+public enum MsgType {
+    SYS(1,"系统消息")
     ;
 
     private int value;
 
     private String label;
 
-    private YesNo(int value, String label) {
+    private MsgType(int value, String label) {
         this.value = value;
         this.label = label;
     }
@@ -34,8 +33,8 @@ public enum YesNo {
         return label;
     }
 
-    public static YesNo from(int value) {
-        for (YesNo member : YesNo.values()) {
+    public static MsgType from(int value) {
+        for (MsgType member : MsgType.values()) {
             if (member.getValue() == value) {
                 return member;
             }

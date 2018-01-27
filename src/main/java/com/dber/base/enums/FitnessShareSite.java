@@ -2,9 +2,9 @@ package com.dber.base.enums;
 
 /**
  * <li>修改记录: ...</li>
- * <li>是否</li>
+ * <li>是否场地共享</li>
  * <pre>
- *     
+ *     系统健身服务设置选项
  * </pre>
  * <li>其他说明: ...</li>
  *
@@ -12,16 +12,17 @@ package com.dber.base.enums;
  * @version 1.0
  * @since 2018/1/11
  */
-public enum YesNo {
+public enum FitnessShareSite {
     YES(1,"是"),
-    NO(2,"否")
+    NO(2,"否"),
+    SELECT(3,"店铺选择")
     ;
 
     private int value;
 
     private String label;
 
-    private YesNo(int value, String label) {
+    private FitnessShareSite(int value, String label) {
         this.value = value;
         this.label = label;
     }
@@ -34,8 +35,8 @@ public enum YesNo {
         return label;
     }
 
-    public static YesNo from(int value) {
-        for (YesNo member : YesNo.values()) {
+    public static FitnessShareSite from(int value) {
+        for (FitnessShareSite member : FitnessShareSite.values()) {
             if (member.getValue() == value) {
                 return member;
             }

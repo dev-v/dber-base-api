@@ -2,9 +2,9 @@ package com.dber.base.enums;
 
 /**
  * <li>修改记录: ...</li>
- * <li>是否</li>
+ * <li>触发类型</li>
  * <pre>
- *     
+ *     1-cron表达式，2-秒
  * </pre>
  * <li>其他说明: ...</li>
  *
@@ -12,16 +12,16 @@ package com.dber.base.enums;
  * @version 1.0
  * @since 2018/1/11
  */
-public enum YesNo {
-    YES(1,"是"),
-    NO(2,"否")
+public enum JobTriggerType {
+    SECOND(2,"秒"),
+    CRON(1,"CRON")
     ;
 
     private int value;
 
     private String label;
 
-    private YesNo(int value, String label) {
+    private JobTriggerType(int value, String label) {
         this.value = value;
         this.label = label;
     }
@@ -34,8 +34,8 @@ public enum YesNo {
         return label;
     }
 
-    public static YesNo from(int value) {
-        for (YesNo member : YesNo.values()) {
+    public static JobTriggerType from(int value) {
+        for (JobTriggerType member : JobTriggerType.values()) {
             if (member.getValue() == value) {
                 return member;
             }

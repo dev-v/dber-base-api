@@ -2,9 +2,9 @@ package com.dber.base.enums;
 
 /**
  * <li>修改记录: ...</li>
- * <li>是否</li>
+ * <li>图片状态</li>
  * <pre>
- *     
+ *     状态：1-可用，2-删除，3-过期
  * </pre>
  * <li>其他说明: ...</li>
  *
@@ -12,16 +12,18 @@ package com.dber.base.enums;
  * @version 1.0
  * @since 2018/1/11
  */
-public enum YesNo {
-    YES(1,"是"),
-    NO(2,"否")
+public enum ImgStatus {
+    AVAILABLE(1,"可用"),
+    DELETED(2,"已删除"),
+    EXPIRED(3,"已过期"),
+    COVER(4,"覆盖上传")
     ;
 
     private int value;
 
     private String label;
 
-    private YesNo(int value, String label) {
+    private ImgStatus(int value, String label) {
         this.value = value;
         this.label = label;
     }
@@ -34,8 +36,8 @@ public enum YesNo {
         return label;
     }
 
-    public static YesNo from(int value) {
-        for (YesNo member : YesNo.values()) {
+    public static ImgStatus from(int value) {
+        for (ImgStatus member : ImgStatus.values()) {
             if (member.getValue() == value) {
                 return member;
             }

@@ -2,9 +2,9 @@ package com.dber.base.enums;
 
 /**
  * <li>修改记录: ...</li>
- * <li>是否</li>
+ * <li>任务类型</li>
  * <pre>
- *     
+ *     1-client(msg-key),2-http请求,3-本地Class实现
  * </pre>
  * <li>其他说明: ...</li>
  *
@@ -12,16 +12,17 @@ package com.dber.base.enums;
  * @version 1.0
  * @since 2018/1/11
  */
-public enum YesNo {
-    YES(1,"是"),
-    NO(2,"否")
+public enum JobTaskType {
+    CLIENT(1,"client(msg-key)"),
+    HTTP(2,"httpUrl"),
+    CLASS(3,"class")
     ;
 
     private int value;
 
     private String label;
 
-    private YesNo(int value, String label) {
+    private JobTaskType(int value, String label) {
         this.value = value;
         this.label = label;
     }
@@ -34,8 +35,8 @@ public enum YesNo {
         return label;
     }
 
-    public static YesNo from(int value) {
-        for (YesNo member : YesNo.values()) {
+    public static JobTaskType from(int value) {
+        for (JobTaskType member : JobTaskType.values()) {
             if (member.getValue() == value) {
                 return member;
             }

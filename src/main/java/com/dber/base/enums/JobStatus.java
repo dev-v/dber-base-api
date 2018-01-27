@@ -2,9 +2,9 @@ package com.dber.base.enums;
 
 /**
  * <li>修改记录: ...</li>
- * <li>是否</li>
+ * <li>任务状态</li>
  * <pre>
- *     
+ *     1-新建，2-启用，3-停用
  * </pre>
  * <li>其他说明: ...</li>
  *
@@ -12,16 +12,17 @@ package com.dber.base.enums;
  * @version 1.0
  * @since 2018/1/11
  */
-public enum YesNo {
-    YES(1,"是"),
-    NO(2,"否")
+public enum JobStatus {
+    NEW(1,"新建"),
+    ENABLED(2,"启用"),
+    DISABLED(3,"禁用")
     ;
 
     private int value;
 
     private String label;
 
-    private YesNo(int value, String label) {
+    private JobStatus(int value, String label) {
         this.value = value;
         this.label = label;
     }
@@ -34,8 +35,8 @@ public enum YesNo {
         return label;
     }
 
-    public static YesNo from(int value) {
-        for (YesNo member : YesNo.values()) {
+    public static JobStatus from(int value) {
+        for (JobStatus member : JobStatus.values()) {
             if (member.getValue() == value) {
                 return member;
             }
