@@ -40,7 +40,7 @@ public enum ImgType {
     }
 
     public boolean isPublic() {
-        return this == SHOP || this == SHOP_SERVICE || this == SHOP_SITE;
+        return this == SHOP || this == SHOP_ENV || this == SHOP_SERVICE || this == SHOP_SITE;
     }
 
     public short getMaxCount() {
