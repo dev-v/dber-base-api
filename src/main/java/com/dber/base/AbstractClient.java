@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Import;
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.LockSupport;
 
 /**
  * <li>修改记录: ...</li>
@@ -29,49 +30,64 @@ import java.util.Map;
 @Import({CacheConfig.class})
 public abstract class AbstractClient implements IClient {
 
-    @Autowired
-    protected SystemConfig systemConfig;
+  @Autowired
+  protected SystemConfig systemConfig;
 
-    @Autowired
-    protected ICacheService cacheService;
+  @Autowired
+  protected ICacheService cacheService;
 
-    protected final DberSystem serviceSystem;
+  protected final DberSystem serviceSystem;
 
-    @Autowired
-    private DberSystem customSystem;
+  @Autowired
+  private DberSystem customSystem;
 
-    protected IClientUtil clientUtil;
+  protected IClientUtil clientUtil;
 
-    /**
-     * 缓存服务Client实例
-     */
-    private static final Map<DberSystem, IClient> SERVICE_CLIENT_MAP = new HashMap<>();
+  /**
+   * 缓存服务Client实例
+   */
+  private static final Map<DberSystem, IClient> SERVICE_CLIENT_MAP = new HashMap<>();
 
-    /**
-     * @param serviceSystem 提供本客户端的服务系统
-     */
-    protected AbstractClient(DberSystem serviceSystem) {
-        if (SERVICE_CLIENT_MAP.containsKey(serviceSystem)) {
-            throw new IllegalArgumentException('【' + serviceSystem.name() + "】客户端实例已经存在，请保持单例使用！");
-        }
-        this.serviceSystem = serviceSystem;
-        SERVICE_CLIENT_MAP.put(serviceSystem, this);
+  /**
+   * @param serviceSystem 提供本客户端的服务系统
+   */
+  protected AbstractClient(DberSystem serviceSystem) {
+    if (SERVICE_CLIENT_MAP.containsKey(serviceSystem)) {
+      throw new IllegalArgumentException('【' + serviceSystem.name() + "】客户端实例已经存在，请保持单例使用！");
+    }
+    this.serviceSystem = serviceSystem;
+    SERVICE_CLIENT_MAP.put(serviceSystem, this);
+  }
+
+  private final boolean setClientUtil() {
+    String customKey = systemConfig.getAuth().getObtain().get(serviceSystem.name().toLowerCase());
+    if (Util.isBlank(customKey)) {
+      throw new IllegalStateException("请在application.yml的节点dber.service-auth配置要访问服务的key【"
+              + serviceSystem.name() + '】');
     }
 
-    private final IClientUtil getClientUtil() {
-        String customKey = systemConfig.getAuth().getObtain().get(serviceSystem.name().toLowerCase());
-        if (Util.isBlank(customKey)) {
-            throw new IllegalStateException("请在application.yml的节点dber.service-auth配置要访问服务的key【"
-                    + serviceSystem.name() + '】');
-        }
+    String baseUrl = cacheService.get(BaseKeyUtil.getBaseKey(this.serviceSystem), String.class);
 
-        String baseUrl = cacheService.get(BaseKeyUtil.getBaseKey(this.serviceSystem), String.class);
-
-        return DefaultClientUtil.getClientUtil(baseUrl, customSystem, customKey);
+    if (Util.isBlank(baseUrl)) {
+      return false;
     }
 
-    @PostConstruct
-    private void init(){
-        this.clientUtil=getClientUtil();
-    }
+    this.clientUtil = DefaultClientUtil.getClientUtil(baseUrl, customSystem, customKey);
+    return true;
+  }
+
+  private void resetClient() {
+    new Thread(() -> {
+      boolean flag;
+      do {
+        flag = setClientUtil();
+        LockSupport.parkNanos(Util.timeMili2Nano(1000 * 10));
+      } while (!flag);
+    }).start();
+  }
+
+  @PostConstruct
+  private void init() {
+    this.resetClient();
+  }
 }
