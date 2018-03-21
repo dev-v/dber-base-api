@@ -13,7 +13,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Import;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.LockSupport;
 
@@ -40,6 +42,12 @@ public abstract class AbstractClient implements IClient {
 
   @Autowired
   private DberSystem customSystem;
+
+  private String baseUrl;
+
+  private static final List<AbstractClient> clinets = new ArrayList<>();
+
+  private boolean isMonitor = false;
 
   protected IClientUtil clientUtil;
 
@@ -72,22 +80,32 @@ public abstract class AbstractClient implements IClient {
       return false;
     }
 
-    this.clientUtil = DefaultClientUtil.getClientUtil(baseUrl, customSystem, customKey);
+    if (!baseUrl.equals(this.baseUrl)) {
+      this.baseUrl = baseUrl;
+      this.clientUtil = DefaultClientUtil.getClientUtil(baseUrl, customSystem, customKey);
+    }
+
     return true;
   }
 
-  private void resetClient() {
-    new Thread(() -> {
-      boolean flag;
-      do {
-        flag = setClientUtil();
-        LockSupport.parkNanos(Util.timeMili2Nano(1000 * 10));
-      } while (!flag);
-    }).start();
+  private void resetClient(AbstractClient client) {
+    clinets.add(client);
+    if (!isMonitor) {
+      isMonitor = true;
+      new Thread(() -> {
+        for (; ; ) {
+          for (AbstractClient aClient : clinets) {
+            aClient.setClientUtil();
+          }
+          LockSupport.parkNanos(Util.timeMili2Nano(1000 * 60));
+        }
+      }).start();
+    }
   }
+
 
   @PostConstruct
   private void init() {
-    this.resetClient();
+    this.resetClient(this);
   }
 }
